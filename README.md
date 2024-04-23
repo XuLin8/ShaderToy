@@ -7,3 +7,4 @@
 **3. Open shader file 
 
 **4. View->Command Palette(or ctrl + shift + P) find ShaderToy: Show GLSL Preview
+```
