@@ -56,6 +56,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     // color += vec3(isInLine(uv,vec2(0.,0.),vec2(1.,1.),fwidth(uv.x)));
     
     // draw sin func
-    color += vec3(isInLine(uv,begin,begin,fwidth(uv.x)));
+    float inLine = isInLine(uv,begin,begin,fwidth(uv.x));
+    color += vec3(inLine,inLine,0.);
     fragColor = vec4(color,1.);
 }
