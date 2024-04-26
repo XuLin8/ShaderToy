@@ -11,23 +11,26 @@ vec3 DrawGrid(in vec2 uv)
 {
     vec3 col = vec3(0.);
     vec2 cell = fract(uv);  // 取小数部分 每个整数段uv都分为[0,1]
-    if(cell.x < fwidth(uv.x))
-    {
-        col = vec3(1.0);
-    }
-    if(cell.y < fwidth(uv.y))
-    {
-        col = vec3(1.0);
-    }
-    
-    if(abs(uv.x) < fwidth(uv.x)) // fwidth(v) = abs(ddx(v))) + abs(ddy(v));
-    {
-        col= vec3(.0,1.,0.);
-    }
-    if(abs(uv.y) < fwidth(uv.y))
-    {
-        col= vec3(1.0,0.,0.);
-    }
+    // if(cell.x < fwidth(uv.x))
+    // {
+    //     col = vec3(1.0);
+    // }
+    // if(cell.y < fwidth(uv.y))
+    // {
+    //     col = vec3(1.0);
+    // }
+    // if(abs(uv.x) < fwidth(uv.x)) // fwidth(v) = abs(ddx(v))) + abs(ddy(v));
+    // {
+    //     col= vec3(.0,1.,0.);
+    // }
+    // if(abs(uv.y) < fwidth(uv.y))
+    // {
+    //     col= vec3(1.0,0.,0.);
+    // }
+    col = vec3(smoothstep(2.*fwidth(uv.x),fwidth(uv.x),cell.x));
+    col += vec3(smoothstep(2.*fwidth(uv.y),fwidth(uv.y),cell.y));
+    col.rb *= smoothstep(fwidth(uv.x),2.*fwidth(uv.x),abs(uv.x));// 当abs(uv.x)小于fwidth(uv.x)时抹除rb分量，在[fwidth(uv.x),2.0fwidth(uv.x)]区间过度
+    col.gb *= smoothstep(fwidth(uv.y),2.*fwidth(uv.y),abs(uv.y));
     return col;
 }
 
@@ -39,10 +42,7 @@ float isInLine(in vec2 p, in vec2 a, in vec2 b, in float w)
     vec2 ap = p - a;
     float proj = clamp(dot(ab, ap)/dot(ab, ab),0.,1.);// ap在ab上的投影长度 比上 |ab|的值
     float d = length(proj * ab - ap);
-    if(d<=w)
-    {
-        f = 1.;   
-    }
+    f = 1. - smoothstep(0.9*w,w,d);//smoothstep(edge0, edge1, x) 等价于 clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0); 
     return f;
 }
 
